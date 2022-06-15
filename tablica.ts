@@ -39,7 +39,7 @@ const client = new apolloClient({
 });
 
 async function request(query: string, apiKey: string) {
-    let variables = {};
+    let variables: object = {};
     const {data: result} = await client.query({
         query: gql(query),
         variables,
@@ -54,7 +54,7 @@ async function request(query: string, apiKey: string) {
 }
 
 async function getProjects(apiKey: string): &&&&&& {
-    const getProjects =
+    const getProjects: string =
         `query {
           projects(first: 1000) {
               nodes {
@@ -62,12 +62,12 @@ async function getProjects(apiKey: string): &&&&&& {
               }
             }
        }`
-    const data = await request(getProjects: string, apiKey: string);
+    const data: string = await request(getProjects: string, apiKey: string);
     return data.projects.nodes;
 }
 
 async function getMergeRequestsIds(projectFullPath: string, to: string, from: string, apiKey: string): &&&&&&&& {
-    const getMergeRequestIds =
+    const getMergeRequestIds: string =
         `query {
          project(fullPath: "${projectFullPath}") {
            mergeRequests(createdAfter: "${to}" authorUsername: "${user}" createdBefore: "${from}" targetBranches: "${branch}") {
@@ -77,12 +77,12 @@ async function getMergeRequestsIds(projectFullPath: string, to: string, from: st
           }
         }
       }`
-    const data = await request(getMergeRequestIds: string, apiKey: string);
+    const data: string = await request(getMergeRequestIds: string, apiKey: string);
     return data.project.mergeRequests.nodes.map(x => x.iid);
 }
 
 async function getIssues(projectFullPath: string, to: string, from: string): &&&&&&& {
-    const getIssues =
+    const getIssues: string =
         `query {
          project(fullPath: "${projectFullPath}") {
            issues(createdAfter: "${to}" authorUsername: "${user}" createdBefore: "${from}") {
@@ -102,13 +102,13 @@ async function getIssues(projectFullPath: string, to: string, from: string): &&&
                 }
             }
         }`
-    const data = await request(getIssues: string, apiKey: string);
+    const data: string = await request(getIssues: string, apiKey: string);
     return data.project.issues.nodes
 }
 
 
 async function getMergeRequestInfo(projectFullPath: string, mrId: string, apiKey: string): &&&&&& {
-    const getMergeInfo =
+    const getMergeInfo: string =
         `query {
           project(fullPath: "${projectFullPath}") {
           fullPath
@@ -127,7 +127,7 @@ async function getMergeRequestInfo(projectFullPath: string, mrId: string, apiKey
              }
            }
        }`
-    const data = await request(getMergeInfo: string, apiKey: string);
+    const data: string = await request(getMergeInfo: string, apiKey: string);
     return data.project.mergeRequest;
 }
 
@@ -141,14 +141,14 @@ function generateBorder(id: number, columName: string, sheetName: any, column: n
 }
 
 function isWorkday(date: any) {
-    const dayOfWeek = date.day()
+    const dayOfWeek: number = date.day()
     return dayOfWeek !== 0 && dayOfWeek !== 6
 }
 
 function getWorkingHours(fromDate: string, toDate: string) {
     let workHours = 0
-    let from = moment(fromDate)
-    let to = moment(toDate)
+    let from: any = moment(fromDate)
+    let to: any = moment(toDate)
     if (from.diff(to)  > 0 ) {
         return "error"
     }
@@ -193,8 +193,8 @@ function getWorkingHours(fromDate: string, toDate: string) {
 
 async function generateReportIssues(infoWorksheet: any, tableData: any) {
     const heading = ["Title", "Created", "Closed", "Author", "Assignees", "Hours spent"]
-    let columName = ["A", "B", "C", "D", "E", "F"]
-    let column = 1
+    let columName: any = ["A", "B", "C", "D", "E", "F"]
+    let column: number = 1
     infoWorksheet.columns = [
         {header: heading[0], key: heading[0], width: 50},
         {header: heading[1], key: heading[1], width: 15},
@@ -217,8 +217,8 @@ async function generateReportIssues(infoWorksheet: any, tableData: any) {
 
 async function generateReport(tableData: any, page: any, fileName: string) {
     const heading = ["Date", "Summary", "State", "Description", "Changes", "Url", "fullPath"]
-    let columName = ["A", "B", "C", "D", "E", "F", "G"]
-    let column = 1
+    let columName: any = ["A", "B", "C", "D", "E", "F", "G"]
+    let column: any = 1
     page.columns = [
         {header: heading[0], key: heading[0], width: 20},
         {header: heading[1], key: heading[1], width: 30},
@@ -236,7 +236,7 @@ async function generateReport(tableData: any, page: any, fileName: string) {
         }
 
         page.addRow(tableData[e])
-        for (let id in columName) {
+        for (let id: number in columName) {
             generateBorder(id, columName, page, column)
         }
         if (tableData[e][5]) {
@@ -281,17 +281,17 @@ function spaceIfNull(obj: any) {
 }
 
 function getTimes(data: any) {
-    const day1 = data.getDate().toString().padStart(2, '0')
-    const month1 = (data.getMonth() + 1).toString().padStart(2, '0')
-    const year1 = data.getFullYear().toString().substring(2)
-    const hours1 = data.getHours().toString().padStart(2, '0')
-    const minutes1 = data.getMinutes().toString().padStart(2, '0')
+    const day1: number = data.getDate().toString().padStart(2, '0')
+    const month1: number = (data.getMonth() + 1).toString().padStart(2, '0')
+    const year1: number = data.getFullYear().toString().substring(2)
+    const hours1: number = data.getHours().toString().padStart(2, '0')
+    const minutes1: number = data.getMinutes().toString().padStart(2, '0')
     return `${day1}.${month1}.${year1} ${hours1}:${minutes1}`
 }
 
 async function main(timea: string, timeb: string, worksheet: string, fileName: string, infoWorksheet: string, apiKey: string) {
-    let tableData = []
-    let tableData1 = []
+    let tableData: any = []
+    let tableData1: any = []
     let flag = false
     let mergeRquestSizes = []
     try {
@@ -313,7 +313,7 @@ async function main(timea: string, timeb: string, worksheet: string, fileName: s
 
         }
         try {
-            let boo = false
+            let boo: boolean = false
             for (let id in mergeRquestSizes) {
                 if (mergeRquestSizes[id].length === 0) {
                     boo = true
@@ -334,7 +334,7 @@ async function main(timea: string, timeb: string, worksheet: string, fileName: s
 }
 
 async function firstPage(apiKey: string, timea: string, timeb: string, infoWorksheet: string) {
-    let tableData1 = []
+    let tableData1: any = []
     const allProjects = await getProjects(apiKey);
 
     for (const project of allProjects) {
@@ -343,20 +343,20 @@ async function firstPage(apiKey: string, timea: string, timeb: string, infoWorks
         if (issues) {
 
             for (let issue of issues) {
-                let createdAt = spaceIfNull(issue.createdAt)
-                let closedAt = spaceIfNull(issue.closedAt)
-                let author = spaceIfNull(issue.author.name)
-                let title = spaceIfNull(issue.title)
+                let createdAt: string = spaceIfNull(issue.createdAt)
+                let closedAt: string = spaceIfNull(issue.closedAt)
+                let author: string = spaceIfNull(issue.author.name)
+                let title: string = spaceIfNull(issue.title)
 
-                let names = " "
+                let names: string = " "
                 if (issue.assignees.nodes !== []) {
-                    let assignees = issue.assignees.nodes.map(o => o.name)
+                    let assignees: any = issue.assignees.nodes.map(o => o.name)
                     names = assignees.reduce((accum, value) => accum + ", " + value)
                 }
 
 
-                let createdAtDate = new Date(createdAt)
-                let closedAtDate = new Date(closedAt)
+                let createdAtDate: any = new Date(createdAt)
+                let closedAtDate: any = new Date(closedAt)
 
 
                 if (closedAt === " ") {
@@ -384,32 +384,32 @@ async function firstPage(apiKey: string, timea: string, timeb: string, infoWorks
 
 // Entry point
 console.log("[INFO] Ввожу входные данные")
-const workbook = new excelJS.Workbook();
-let worksheet = []
-let infoWorksheet = workbook.addWorksheet("Issues Summary")
-const options = getOptions()
-const apiKey = options.api
-let time = []
+const workbook: any = new excelJS.Workbook();
+let worksheet: any = []
+let infoWorksheet: any = workbook.addWorksheet("Issues Summary")
+const options: any = getOptions()
+const apiKey: any = options.api
+let time: any = []
 time = options.time.split(',')
 if (time.length % 2 !== 0) {
     time.pop()
 }
-let times = []
+let times: any = []
 for (let i = 0; i < time.length; i++) {
     times.push({from: time[i], to: time[i + 1]})
     i++
 }
-let branch = options.branch
-let user = options.name
+let branch: any = options.branch
+let user: string = options.name
 for (let id in times) {
-    let data = new Date(times[id].from)
-    let data1 = new Date(times[id].to)
+    let data: any = new Date(times[id].from)
+    let data1: any = new Date(times[id].to)
 
     worksheet.push(`${prettyDate(data)} - ${prettyDate(data1)}`)
 }
-for (let id in worksheet) {
+for (let id: number in worksheet) {
     firstPage(apiKey, times[id].from, times[id].to, infoWorksheet)
 }
-for (let id in worksheet) {
+for (let id: number in worksheet) {
     main(times[id].from, times[id].to, addWorksheet(worksheet, id), options.file, infoWorksheet, apiKey)
 }
