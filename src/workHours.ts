@@ -50,10 +50,4 @@ function getWorkingHours(fromDate: string, toDate: string): number | string {
     }
     return workHours
 }
-
-const hours1 =
-    getWorkingHours(
-        '2022-06-10T23:00:00+03:00',
-        '2022-06-15T01:59:59+03:00',
-    )
-console.log(hours1);
+export default getWorkingHours
