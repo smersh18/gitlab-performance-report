@@ -50,4 +50,5 @@ function getWorkingHours(fromDate: string, toDate: string): number | string {
     }
     return workHours
 }
+
 export default getWorkingHours

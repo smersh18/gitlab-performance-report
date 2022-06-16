@@ -6,4 +6,5 @@ function getTimes(data: any) {
     const minutes1: number = data.getMinutes().toString().padStart(2, '0')
     return `${day1}.${month1}.${year1} ${hours1}:${minutes1}`
 }
+
 export default getTimes

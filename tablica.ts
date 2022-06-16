@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const yargs = require("yargs");
 import moment from 'moment'
+
 const gql = require("graphql-tag");
 const apolloClient = require("apollo-client").ApolloClient;
 const fetch = require("node-fetch");
@@ -20,7 +21,7 @@ function getOptions() {
         .argv
 }
 
-function prettyDate(date: any): string {
+function prettyDate(date: Date): string {
     const day = date.getDate().toString().padStart(2, '0')
     const month = (date.getMonth() + 1).toString().padStart(2, '0')
     const year = date.getFullYear().toString().substring(2)
@@ -53,7 +54,10 @@ async function request(query: string, apiKey: string) {
     return result
 }
 
-async function getProjects(apiKey: string): &&&&&& {
+async function getProjects(apiKey: string):
+
+&&&&&&
+{
     const getProjects: string =
         `query {
           projects(first: 1000) {
@@ -62,11 +66,20 @@ async function getProjects(apiKey: string): &&&&&& {
               }
             }
        }`
-    const data: string = await request(getProjects: string, apiKey: string);
+    const data: string = await request(getProjects
+:
+    string, apiKey
+:
+    string
+)
+    ;
     return data.projects.nodes;
 }
 
-async function getMergeRequestsIds(projectFullPath: string, to: string, from: string, apiKey: string): &&&&&&&& {
+async function getMergeRequestsIds(projectFullPath: string, to: string, from: string, apiKey: string):
+
+&&&&&&&&
+{
     const getMergeRequestIds: string =
         `query {
          project(fullPath: "${projectFullPath}") {
@@ -77,11 +90,20 @@ async function getMergeRequestsIds(projectFullPath: string, to: string, from: st
           }
         }
       }`
-    const data: string = await request(getMergeRequestIds: string, apiKey: string);
+    const data: string = await request(getMergeRequestIds
+:
+    string, apiKey
+:
+    string
+)
+    ;
     return data.project.mergeRequests.nodes.map(x => x.iid);
 }
 
-async function getIssues(projectFullPath: string, to: string, from: string): &&&&&&& {
+async function getIssues(projectFullPath: string, to: string, from: string):
+
+&&&&&&&
+{
     const getIssues: string =
         `query {
          project(fullPath: "${projectFullPath}") {
@@ -102,12 +124,21 @@ async function getIssues(projectFullPath: string, to: string, from: string): &&&
                 }
             }
         }`
-    const data: string = await request(getIssues: string, apiKey: string);
+    const data: string = await request(getIssues
+:
+    string, apiKey
+:
+    string
+)
+    ;
     return data.project.issues.nodes
 }
 
 
-async function getMergeRequestInfo(projectFullPath: string, mrId: string, apiKey: string): &&&&&& {
+async function getMergeRequestInfo(projectFullPath: string, mrId: string, apiKey: string):
+
+&&&&&&
+{
     const getMergeInfo: string =
         `query {
           project(fullPath: "${projectFullPath}") {
@@ -127,7 +158,13 @@ async function getMergeRequestInfo(projectFullPath: string, mrId: string, apiKey
              }
            }
        }`
-    const data: string = await request(getMergeInfo: string, apiKey: string);
+    const data: string = await request(getMergeInfo
+:
+    string, apiKey
+:
+    string
+)
+    ;
     return data.project.mergeRequest;
 }
 
@@ -140,7 +177,8 @@ function generateBorder(id: number, columName: string, sheetName: any, column: n
     };
 }
 
-function isWorkday(date: any) {
+
+function isWorkDay(date: Date) {
     const dayOfWeek: number = date.day()
     return dayOfWeek !== 0 && dayOfWeek !== 6
 }
@@ -149,7 +187,7 @@ function getWorkingHours(fromDate: string, toDate: string) {
     let workHours = 0
     let from: any = moment(fromDate)
     let to: any = moment(toDate)
-    if (from.diff(to)  > 0 ) {
+    if (from.diff(to) > 0) {
         return "error"
     }
     if (from.isSame(to, "day")) {
@@ -164,7 +202,7 @@ function getWorkingHours(fromDate: string, toDate: string) {
         }
     }
     if (from.hour() < 18) {
-        if (isWorkday(from) === true) {
+        if (isWorkDay(from) === true) {
             if (from.hour() <= 9) {
                 workHours = workHours + 8
             } else {
@@ -174,12 +212,12 @@ function getWorkingHours(fromDate: string, toDate: string) {
     }
     from.add(1, "day")
     while (from.isSame(to, "day") === false) {
-        if (isWorkday(from) === true) {
+        if (isWorkDay(from) === true) {
             workHours = workHours + 8
         }
         from.add(1, "day")
     }
-    if (isWorkday(to) === true) {
+    if (isWorkDay(to) === true) {
         if (to.hour() <= 9) {
             if (to.hour() >= 18) {
                 workHours = workHours + 8
@@ -280,7 +318,7 @@ function spaceIfNull(obj: any) {
     return obj
 }
 
-function getTimes(data: any) {
+function getTimes(data: Date) {
     const day1: number = data.getDate().toString().padStart(2, '0')
     const month1: number = (data.getMonth() + 1).toString().padStart(2, '0')
     const year1: number = data.getFullYear().toString().substring(2)
@@ -355,8 +393,8 @@ async function firstPage(apiKey: string, timea: string, timeb: string, infoWorks
                 }
 
 
-                let createdAtDate: any = new Date(createdAt)
-                let closedAtDate: any = new Date(closedAt)
+                let createdAtDate: Date = new Date(createdAt)
+                let closedAtDate: Date = new Date(closedAt)
 
 
                 if (closedAt === " ") {
@@ -402,8 +440,8 @@ for (let i = 0; i < time.length; i++) {
 let branch: any = options.branch
 let user: string = options.name
 for (let id in times) {
-    let data: any = new Date(times[id].from)
-    let data1: any = new Date(times[id].to)
+    let data: Date = new Date(times[id].from)
+    let data1: Date = new Date(times[id].to)
 
     worksheet.push(`${prettyDate(data)} - ${prettyDate(data1)}`)
 }
