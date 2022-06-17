@@ -1,54 +1,41 @@
-import moment, {Moment} from 'moment'
+import {getWorkingHours} from "../src/workHours";
 
-function isWorkDay(date: Moment): boolean {
-  const dayOfWeek: number = date.day()
-  return dayOfWeek !== 0 && dayOfWeek !== 6
-}
+describe("getWorkingHours", () => {
 
-function getWorkingHours(fromDate: string, toDate: string): number | string {
-  let workHours: number = 0
-  let from: Moment = moment(fromDate)
-  let to: Moment = moment(toDate)
+  it('should return work hours correctly inside week', () => {
+    const workingHours =
+        getWorkingHours(
+            '2022-06-10T23:00:00+03:00',
+            '2022-06-15T01:59:59+03:00',
+        )
+    expect(workingHours).toBe(16);
+  });
 
-  if (from.isSame(to, 'day')) {
-    if (to.hour() < from.hour()) {
-      return 'error'
-    }
-    if (from.hour() < 9 && to.hour() < 9) {
-      return 0
-    } else {
-      if (to.hour() - from.hour() > 8) {
-        return 8
-      } else {
-        return to.hour() - from.hour()
-      }
-    }
-  }
+  it('should return work hours correctly for the whole week', () => {
+    const workingHours =
+        getWorkingHours(
+            '2022-06-14T08:00:00+03:00',
+            '2022-06-21T01:59:59+03:00',
+        )
+    expect(workingHours).toBe(40);
+  });
 
-  if (from.hour() < 18 && isWorkDay(from)) {
-    if (from.hour() <= 9) {
-      workHours = workHours + 8
-    } else {
-      workHours = workHours + 18 - from.hour()
-    }
-  }
+  it('should return work hours correctly for several months', () => {
+    const workingHours =
+        getWorkingHours(
+            '2021-02-22T00:35:00+03:00',
+            '2021-04-15T00:17:00+03:00',
+        )
+    expect(workingHours).toBe(304);
+  });
 
-  from.add(1, 'day')
-  while (!from.isSame(to, 'day')) {
-    if (isWorkDay(from)) {
-      workHours = workHours + 8
-    }
-    from.add(1, 'day')
-  }
+  it('should fail when start date is after end date', () => {
+    const workingHours =
+        getWorkingHours(
+            '2022-06-15T15:00:00+03:00',
+            '2022-06-15T01:59:59+03:00',
+        )
+    expect(workingHours).toBe("error");
+  });
 
-  if (isWorkDay(to)) {
-    if (to.hour() > 9 && to.hour() >= 18) {
-      workHours = workHours + 8
-    } else if (to.hour() >= 9) {
-      workHours = workHours + to.hour() - 9
-    }
-  }
-  return workHours
-}
-
-export {getWorkingHours, isWorkDay};
+});

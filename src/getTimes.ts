@@ -1,5 +1,5 @@
 function getTimes(data: any) {
-  // TODO: rename it
+
   const day1: number = data.getDate().toString().padStart(2, '0')
     const month1: number = (data.getMonth() + 1).toString().padStart(2, '0')
     const year1: number = data.getFullYear().toString().substring(2)
