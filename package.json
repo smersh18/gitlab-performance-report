@@ -22,6 +22,12 @@
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "moment": "^2.29.3"
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-client": "^2.6.10",
+    "apollo-link-http": "^1.5.17",
+    "graphql": "^16.0.0",
+    "graphql-tag": "^2.12.6",
+    "moment": "^2.29.3",
+    "node-fetch": "^3.2.6"
   }
 }
