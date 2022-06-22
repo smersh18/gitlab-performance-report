@@ -1,18 +1,17 @@
-// import yargs, {Argv} from 'yargs';
+import yargs, {Argv} from 'yargs';
 import gql from 'graphql-tag';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 import ApolloClient from 'apollo-client';
 import fetch from 'cross-fetch'
 
-// function getOptions() {
-//     let argv = yargs
-//         .usage("Usage: -n <name>")
-//         .option("a", {alias: "api", describe: "Your api key", type: "string", demandOption: true})
-//         .argv
-// return argv
-// }
-const apiKey: any = "glpat-AePyJyMCyksNgsYGYQQV"
+function getOptions() {
+    let argv = yargs
+        .usage("Usage: -n <name>")
+        .option("a", {alias: "api", describe: "Your api key", type: "string", demandOption: true})
+        .argv
+return argv
+}
 async function getProjects(apiKey: string){
     const getProjects: string =
         `query {
@@ -47,6 +46,6 @@ const client = new ApolloClient({
     link: httpLink1,
     cache: new InMemoryCache()
 });
-// const options: any = getOptions()
-// const apiKey: any = options.api
+const options: any = getOptions()
+const apiKey: any = options.api
 getProjects(apiKey)

@@ -1,34 +1,29 @@
-
-
 import {isWorkDay} from "../src/workHours";
-
 import moment from "moment";
+describe("getWorkingHours", () => {
 
-test('should be false', () => {
-    let date = moment("2022-06-18T14:58:50+00:00")
+    it('should return work hours correctly inside week', () => {
+        let date = moment("2022-06-18T14:58:50+00:00")
+        const boolean = isWorkDay(date)
+        expect(boolean).toBe(false);
+    });
 
-    expect(isWorkDay(date)).toBe(false);
-});
+    it('should return work hours correctly for the whole week', () => {
+        let date = moment("2021-03-09T14:58:50+00:00")
+        const boolean = isWorkDay(date)
+        expect(boolean).toBe(true);
+    });
 
-// TODO: rename it
-test('should be true', () => {
-    let data = moment("2021-03-09T14:58:50+00:00")
-    const hours = isWorkDay(data)
+    it('should return work hours correctly for several months', () => {
+        let date = moment("2021-03-09T14:58:50+00:00")
+        const boolean = isWorkDay(date)
+        expect(boolean).toBe(true);
+    });
 
-    expect(hours).toBe(true);
-});
+    it('should fail when start date is after end date', () => {
+        let date = moment("2021-03-09T14:58:50+00:00")
+        const boolean = isWorkDay(date)
+        expect(boolean).toBe(true);
+    });
 
-// TODO: rename it
-test('should be true', () => {
-    let data = moment("2021-03-09T14:58:50+00:00")
-    const hours = isWorkDay(data)
-
-    expect(hours).toBe(true);
-});
-
-// TODO: rename it
-test('should be true', () => {
-    let data = moment("2021-03-09T14:58:50+00:00")
-    const hours = isWorkDay(data)
-    expect(hours).toBe(true);
 });
