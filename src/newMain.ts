@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 import ApolloClient from 'apollo-client';
-import fetch from "node-fetch";
+import fetch from 'cross-fetch'
 
 // function getOptions() {
 //     let argv = yargs
@@ -41,7 +41,7 @@ async function request(query: string, apiKey: string) {
 }
 const httpLink1 = new HttpLink({
     uri: "https://git.mnxsc.tech:444/api/graphql",
-    fetchOptions: fetch
+    fetch
 });
 const client = new ApolloClient({
     link: httpLink1,
