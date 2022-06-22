@@ -9,21 +9,8 @@ describe("getWorkingHours", () => {
     });
 
     it('should return true', () => {
-        let date = moment("2021-03-09T14:58:50+00:00")
-        const boolean = isWorkDay(date)
-        expect(boolean).toBe(true);
+        expect(isWorkDay(moment("2021-03-09T14:58:50+00:00"))).toBe(true);
+        expect(isWorkDay(moment("2021-03-10T14:58:50+00:00"))).toBe(true);
+        expect(isWorkDay(moment("2021-03-11T14:58:50+00:00"))).toBe(true);
     });
-
-    it('should return true', () => {
-        let date = moment("2021-03-09T14:58:50+00:00")
-        const boolean = isWorkDay(date)
-        expect(boolean).toBe(true);
-    });
-
-    it('should return true', () => {
-        let date = moment("2021-03-09T14:58:50+00:00")
-        const boolean = isWorkDay(date)
-        expect(boolean).toBe(true);
-    });
-
 });
