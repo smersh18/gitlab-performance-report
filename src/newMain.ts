@@ -12,20 +12,8 @@ function getOptions() {
         .argv
 return argv
 }
-async function getProjects(apiKey: string){
-    const getProjects: string =
-        `query {
-          projects(first: 1000) {
-              nodes {
-                fullPath
-              }
-            }
-       }`
-    const data = await request(getProjects, apiKey);
-    console.log(data.projects);
-}
-async function request(query: string, apiKey: string) {
-    let variables: object = {};
+async function request(query, apiKey) {
+    let variables = {};
     const {data: result} = await client.query({
         query: gql(query),
         variables,
@@ -38,6 +26,33 @@ async function request(query: string, apiKey: string) {
     });
     return result
 }
+async function getProjects(apiKey: string){
+    const getProjects: string =
+        `query {
+          projects(first: 1000) {
+              nodes {
+                fullPath
+              }
+            }
+       }`
+    const data = await request(getProjects, apiKey);
+    return data.projects.nodes;
+}
+async function getMergeRequestsIds(projectFullPath: any, to: string, from: string, apiKey: string) {
+    const getMergeRequestIds =
+        `query {
+         project(fullPath: "${projectFullPath}") {
+           mergeRequests(createdAfter: "${to}" authorUsername: "${user}" createdBefore: "${from}" targetBranches: "${branch}") {
+             nodes {
+               iid
+             }
+          }
+        }
+      }`
+    const data = await request(getMergeRequestIds, apiKey);
+    return data.project.mergeRequests.nodes.map(x => x.iid);
+}
+
 const httpLink1 = new HttpLink({
     uri: "https://git.mnxsc.tech:444/api/graphql",
     fetch
@@ -48,4 +63,6 @@ const client = new ApolloClient({
 });
 const options: any = getOptions()
 const apiKey: any = options.api
-getProjects(apiKey)
+const from = "2021-03-09T14:58:50+00:00"
+const to = "2021-04-09T14:58:50+00:00"
+getMergeRequestsIds(getProjects(apiKey).fullPath, from, to, apiKey)
