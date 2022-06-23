@@ -53,7 +53,7 @@ async function getMergeRequestsIds(projectFullPath: any, to: string, from: strin
         }
       }`
     const data = await request(getMergeRequestIds, apiKey);
-    return data.project.mergeRequests.nodes.map(x => x.iid);
+    console.log(data)
 }
 
 const httpLink1 = new HttpLink({
@@ -70,4 +70,8 @@ const from: string = "2021-03-09T14:58:50+00:00"
 const to: string = "2021-04-09T14:58:50+00:00"
 const user: string = "lukoyanov"
 const branch: string = "lukoyanov"
-getMergeRequestsIds(getProjects(apiKey).fullPath, from, to, apiKey)
+async function main(){
+    for(let project of (await getProjects(apiKey))){
+        console.log(getMergeRequestsIds(project.fullPath, from, to, apiKey) }
+}
+main()
