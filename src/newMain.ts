@@ -53,7 +53,7 @@ async function getMergeRequestsIds(projectFullPath: any, to: string, from: strin
         }
       }`
     const data = await request(getMergeRequestIds, apiKey);
-    return data.project.mergeRequests.nodes.map(x => x.iid);
+    return data.project.mergeRequests.nodes.map((x: any) => x.iid);
 }
 
 async function getMergeRequestInfo(projectFullPath: any, mrId: string, apiKey: string) {
