@@ -1,7 +1,7 @@
 import yargs, {Argv} from 'yargs';
 import gql from 'graphql-tag';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from 'apollo-link-http';
+import {InMemoryCache} from 'apollo-cache-inmemory';
+import {HttpLink} from 'apollo-link-http';
 import ApolloClient from 'apollo-client';
 import fetch from 'cross-fetch'
 
@@ -10,9 +10,10 @@ function getOptions() {
         .usage("Usage: -n <name>")
         .option("a", {alias: "api", describe: "Your api key", type: "string", demandOption: true})
         .argv
-return argv
+    return argv
 }
-async function request(query, apiKey) {
+
+async function request(query: string, apiKey: string) {
     let variables = {};
     const {data: result} = await client.query({
         query: gql(query),
@@ -26,7 +27,8 @@ async function request(query, apiKey) {
     });
     return result
 }
-async function getProjects(apiKey: string){
+
+async function getProjects(apiKey: string) {
     const getProjects: string =
         `query {
           projects(first: 1000) {
@@ -38,6 +40,7 @@ async function getProjects(apiKey: string){
     const data = await request(getProjects, apiKey);
     return data.projects.nodes;
 }
+
 async function getMergeRequestsIds(projectFullPath: any, to: string, from: string, apiKey: string) {
     const getMergeRequestIds =
         `query {
@@ -63,6 +66,8 @@ const client = new ApolloClient({
 });
 const options: any = getOptions()
 const apiKey: any = options.api
-const from = "2021-03-09T14:58:50+00:00"
-const to = "2021-04-09T14:58:50+00:00"
+const from: string = "2021-03-09T14:58:50+00:00"
+const to: string = "2021-04-09T14:58:50+00:00"
+const user: string = "lukoyanov"
+const branch: string = "lukoyanov"
 getMergeRequestsIds(getProjects(apiKey).fullPath, from, to, apiKey)
