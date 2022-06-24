@@ -8,9 +8,20 @@ import fetch from 'cross-fetch'
 function getOptions() {
     let argv = yargs
         .usage("Usage: -n <name>")
+        .option("n", {alias: "name", describe: "Your name", type: "string", demandOption: true})
+        .option("b", {alias: "branch", describe: "Your branch", type: "string", demandOption: true})
+        .option("t", {alias: "time", describe: "Sum of time", type: "number", demandOption: true})
         .option("a", {alias: "api", describe: "Your api key", type: "string", demandOption: true})
         .argv
     return argv
+}
+
+function prettyDate(date: Date): string {
+    const day = date.getDate().toString().padStart(2, '0')
+    const month = (date.getMonth() + 1).toString().padStart(2, '0')
+    const year = date.getFullYear().toString().substring(2)
+
+    return `${day}.${month}.${year}`;
 }
 
 async function request(query: string, apiKey: string) {
@@ -82,20 +93,36 @@ async function getMergeRequestInfo(projectFullPath: any, mrId: string, apiKey: s
 
 const httpLink1 = new HttpLink({
     uri: "https://git.mnxsc.tech:444/api/graphql",
-    fetchOptions: fetch
+    fetch: fetch
 });
 const client = new ApolloClient({
     link: httpLink1,
     cache: new InMemoryCache()
 });
+
+let worksheet: any = []
 const options: any = getOptions()
 const apiKey: any = options.api
-const from: string = "2021-03-09T14:58:50+00:00"
-const to: string = "2021-04-09T14:58:50+00:00"
-const user: string = "lukoyanov"
-const branch: string = "master"
+let time = []
+time = options.time.split(',')
+if (time.length % 2 !== 0) {
+    time.pop()
+}
+let times = []
+for (let i = 0; i < time.length; i++) {
+    times.push({from: time[i], to: time[i + 1]})
+    i++
+}
+for (let id in times) {
+    let data = new Date(times[id].from)
+    let data1 = new Date(times[id].to)
 
-async function main() {
+    worksheet.push(`${prettyDate(data)} - ${prettyDate(data1)}`)
+}
+let branch = options.branch
+let user = options.name
+
+async function main(from: string, to: string) {
     for (const project of (await getProjects(apiKey))) {
         const mergeRequestIds = await getMergeRequestsIds(project.fullPath, from, to, apiKey)
         for (const mrId of mergeRequestIds) {
@@ -103,5 +130,6 @@ async function main() {
         }
     }
 }
-
-main()
+for (let id in worksheet) {
+    main(times[id].from, times[id].to)
+}
