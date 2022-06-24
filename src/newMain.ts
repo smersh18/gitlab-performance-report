@@ -6,113 +6,128 @@ import ApolloClient from 'apollo-client';
 import fetch from 'cross-fetch'
 import moment, {Moment} from "moment";
 import excelJS from "exceljs";
+import {getWorkingHours} from "./workHours";
+import getTimes from "./getTimes";
+import spaceIfNull from "./spaceIfNull";
+import prettyDate from "./prettyDate";
+import getCountSize from "./getCountSize";
+import generateBorder from "./generateBorder";
 
 function getOptions() {
     let argv = yargs
         .usage("Usage: -n <name>")
         .option("n", {alias: "name", describe: "Your name", type: "string", demandOption: true})
         .option("b", {alias: "branch", describe: "Your branch", type: "string", demandOption: true})
-        .option("t", {alias: "time", describe: "Sum of time", type: "number", demandOption: true})
+        .option("t", {alias: "time", describe: "Sum of time", type: "string", demandOption: true})
         .option("a", {alias: "api", describe: "Your api key", type: "string", demandOption: true})
         .option("f", {alias: "file", describe: "Your file name", type: "string", demandOption: true})
         .argv
     return argv
 }
 
+async function getIssues(projectFullPath: string, to: string, from: string) {
+    const getIssues =
+        `query {
+         project(fullPath: "${projectFullPath}") {
+           issues(createdAfter: "${to}" authorUsername: "${user}" createdBefore: "${from}") {
+             nodes {
+               createdAt
+                 closedAt
+                 author{
+                     name
+                        }
+                 assignees{
+                      nodes{
+                         name
+                           }
+                        }
+                        title
+                    }
+                }
+            }
+        }`
+    const data = await request(getIssues, apiKey);
+    return data.project.issues.nodes
+}
+
 function addWorksheet(worksheet: any, id: number) {
     return workbook.addWorksheet(worksheet[id])
 }
 
-function prettyDate(date: Date): string {
-    const day = date.getDate().toString().padStart(2, '0')
-    const month = (date.getMonth() + 1).toString().padStart(2, '0')
-    const year = date.getFullYear().toString().substring(2)
+async function firstPage(apiKey: string, timea: string, timeb: string, infoWorksheet: any) {
+    let tableData1 = []
+    const allProjects = await getProjects(apiKey);
 
-    return `${day}.${month}.${year}`;
-}
+    for (const project of allProjects) {
+        const issues = await getIssues(project.fullPath, timea, timeb)
 
-function getCountSize(mergeInfo: any) {
-    let countSize
-    if (mergeInfo.diffStatsSummary.fileCount > 10) {
-        countSize = "XXL"
-    } else if (mergeInfo.diffStatsSummary.fileCount >= 8) {
-        countSize = "XL"
-    } else if (mergeInfo.diffStatsSummary.fileCount >= 6) {
-        countSize = "L"
-    } else if (mergeInfo.diffStatsSummary.fileCount >= 4) {
-        countSize = "M"
-    } else if (mergeInfo.diffStatsSummary.fileCount >= 1) {
-        countSize = "S"
-    } else if (mergeInfo.diffStatsSummary.fileCount === 0) {
-        countSize = "XS"
+        if (issues) {
+
+            for (let issue of issues) {
+                let createdAt = spaceIfNull(issue.createdAt)
+                let closedAt = spaceIfNull(issue.closedAt)
+                let author = spaceIfNull(issue.author.name)
+                let title = spaceIfNull(issue.title)
+
+                let names: any = " "
+                if (issue.assignees.nodes !== []) {
+                    let assignees: any = issue.assignees.nodes.map((o: any) => o.name)
+                    names = assignees.reduce((accum, value) => accum + ", " + value)
+                }
+
+
+                let createdAtDate = new Date(createdAt)
+                let closedAtDate = new Date(closedAt)
+
+
+                if (closedAt === " ") {
+                    tableData1.push([title, getTimes(createdAtDate), " ", author, names, " "])
+                } else {
+                    let workHours = getWorkingHours(
+                        createdAt,
+                        closedAt,
+                    );
+                    // TODO: Rename vars to something more meaningful
+                    tableData1.push([
+                        title,
+                        getTimes(createdAtDate),
+                        getTimes(closedAtDate),
+                        author,
+                        names,
+                        workHours
+                    ])
+                }
+            }
+        }
     }
-    return countSize
+    generateReportIssues(infoWorksheet, tableData1)
 }
 
-function getTimes(data: any) {
-    const hours: number = data.getHours().toString().padStart(2, '0')
-    const minutes: number = data.getMinutes().toString().padStart(2, '0')
+async function generateReportIssues(infoWorksheet: any, tableData: any) {
+    const heading = ["Title", "Created", "Closed", "Author", "Assignees", "Hours spent"]
+    let columName = ["A", "B", "C", "D", "E", "F"]
+    let column = 1
+    infoWorksheet.columns = [
+        {header: heading[0], key: heading[0], width: 50},
+        {header: heading[1], key: heading[1], width: 15},
+        {header: heading[2], key: heading[2], width: 15},
+        {header: heading[3], key: heading[3], width: 18},
+        {header: heading[4], key: heading[4], width: 35},
+        {header: heading[5], key: heading[5], width: 15},
+    ];
 
-    return `${prettyDate(data)} ${hours}:${minutes}`
-}
-function generateBorder(id: number, columName: any, sheetName: any, column: number) {
-    sheetName.getCell(columName[id] + column).border = {
-        top: {style: 'thin', color: {argb: '000000'}},
-        left: {style: 'thin', color: {argb: '000000'}},
-        bottom: {style: 'thin', color: {argb: '000000'}},
-        right: {style: 'thin', color: {argb: '000000'}}
-    };
-}
-// function isWorkDay(date: Moment): boolean {
-//     const dayOfWeek: number = date.day()
-//     return dayOfWeek !== 0 && dayOfWeek !== 6
-// }
+    for (let e = 0; e < tableData.length; e++) {
+        if (column >= e) {
+            column = column + 1
+        }
+        infoWorksheet.addRow(tableData[e])
 
-// function getWorkingHours(fromDate: string, toDate: string): number | string {
-//     let workHours: number = 0
-//     let from: Moment = moment(fromDate)
-//     let to: Moment = moment(toDate)
-//
-//     if (from.isSame(to, 'day')) {
-//         if (to.hour() < from.hour()) {
-//             return 'error'
-//         }
-//         if (from.hour() < 9 && to.hour() < 9) {
-//             return 0
-//         } else {
-//             if (to.hour() - from.hour() > 8) {
-//                 return 8
-//             } else {
-//                 return to.hour() - from.hour()
-//             }
-//         }
-//     }
-//
-//     if (from.hour() < 18 && isWorkDay(from)) {
-//         if (from.hour() <= 9) {
-//             workHours = workHours + 8
-//         } else {
-//             workHours = workHours + 18 - from.hour()
-//         }
-//     }
-//
-//     from.add(1, 'day')
-//     while (!from.isSame(to, 'day')) {
-//         if (isWorkDay(from)) {
-//             workHours = workHours + 8
-//         }
-//         from.add(1, 'day')
-//     }
-//
-//     if (isWorkDay(to)) {
-//         if (to.hour() > 9 && to.hour() >= 18) {
-//             workHours = workHours + 8
-//         } else if (to.hour() >= 9) {
-//             workHours = workHours + to.hour() - 9
-//         }
-//     }
-//     return workHours
-// }
+        for (let id = 0; id < columName.length; id++) {
+            generateBorder(id, columName, infoWorksheet, column)
+        }
+    }
+}
+
 async function generateReport(tableData: any, page: any, fileName: string, tableData1: any, infoWorksheet: any) {
     const heading = ["Date", "Summary", "State", "Description", "Changes", "Url", "fullPath"]
     let columName = ["A", "B", "C", "D", "E", "F", "G"]
@@ -126,7 +141,6 @@ async function generateReport(tableData: any, page: any, fileName: string, table
         {header: heading[5], key: heading[5], width: 15},
         {header: heading[6], key: heading[6], width: 20}
     ];
-
 
     for (let e = 0; e < tableData.length; e++) {
         if (column >= e) {
@@ -229,7 +243,7 @@ let worksheet: any = []
 const options: any = getOptions()
 const apiKey: any = options.api
 let time = []
-time = options.time.toString().split(',')
+time = options.time.split(',')
 if (time.length % 2 !== 0) {
     time.pop()
 }
@@ -266,8 +280,6 @@ async function main(timea: string, timeb: string, worksheet: any, fileName: stri
 
                 tableData.push([createdAt, mergeInfo.title, mergeInfo.state, mergeInfo.description, getCountSize(mergeInfo), mergeInfo.webUrl, project.fullPath])
             }
-
-
         }
         try {
             let boo: boolean = false
@@ -288,6 +300,10 @@ async function main(timea: string, timeb: string, worksheet: any, fileName: stri
     } catch (err) {
         console.log(err);
     }
+}
+
+for (let id = 0; id < worksheet.length; id++) {
+    firstPage(apiKey, times[id].from, times[id].to, infoWorksheet)
 }
 for (let id = 0; id < worksheet.length; id++) {
     main(times[id].from, times[id].to, addWorksheet(worksheet, id), options.file, infoWorksheet, apiKey)
