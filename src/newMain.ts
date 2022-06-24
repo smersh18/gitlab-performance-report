@@ -72,7 +72,7 @@ async function firstPage(apiKey: string, timea: string, timeb: string, infoWorks
                 let names: any = " "
                 if (issue.assignees.nodes !== []) {
                     let assignees: any = issue.assignees.nodes.map((o: any) => o.name)
-                    names = assignees.reduce((accum, value) => accum + ", " + value)
+                    names = assignees.reduce((accum: any, value: any) => accum + ", " + value)
                 }
 
 
