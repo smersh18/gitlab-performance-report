@@ -43,5 +43,6 @@ async function main(timeAfter: string, timeBefore: string, worksheet: any, fileN
     } catch (err) {
         console.log(err);
     }
+    return workbook
 }
 export default main

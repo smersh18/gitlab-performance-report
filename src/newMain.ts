@@ -22,6 +22,7 @@ function getOptions() {
         .argv
     return argv
 }
+
 const link = new HttpLink({
     uri: "https://git.mnxsc.tech:444/api/graphql",
     fetch: fetch
@@ -54,17 +55,23 @@ for (let id in times) {
 }
 let mergeRequestWorksheet = []
 for (let id = 0; id < worksheet.length; id++) {
-     mergeRequestWorksheet.push(addWorksheets(worksheet, id, workbook))
+    mergeRequestWorksheet.push(addWorksheets(worksheet, id, workbook))
 }
 let branch = options.branch
 let user = options.name
+let fileName = options.file
 console.log("создаю первую страницу");
+async function fullFile(apiKey: string, times: any, mergeRequestWorksheet: any){
+    for (let id = 0; id < worksheet.length; id++) {
+        workbook = await firstPage(apiKey, times[id].from, times[id].to, workbook, user, client)
+    }
 
-for (let id = 0; id < worksheet.length; id++) {
-    workbook = firstPage(apiKey, times[id].from, times[id].to, workbook, user, client)
+    console.log("создаю основную страницу");
+    for (let id = 0; id < worksheet.length; id++) {
+        workbook = await main(times[id].from, times[id].to, mergeRequestWorksheet[id], options.file, apiKey, user, branch, client, workbook)
+    }
+    await workbook.xlsx.writeFile(`${fileName}.xls`);
 }
 
-console.log("создаю основную страницу");
-for (let id = 0; id < worksheet.length; id++) {
-  main(times[id].from, times[id].to, mergeRequestWorksheet[id], options.file, apiKey, user, branch, client, workbook)
-}
+fullFile(apiKey, times, mergeRequestWorksheet)
+
