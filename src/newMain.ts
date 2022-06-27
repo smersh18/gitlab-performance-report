@@ -9,6 +9,8 @@ import addWorksheet from "./addWorksheet";
 import firstPage from "./firstPage";
 import main from "./main";
 
+console.log("ввожу входные данные");
+
 function getOptions() {
     let argv = yargs
         .usage("Usage: -n <name>")
@@ -51,10 +53,11 @@ for (let id in times) {
 }
 let branch = options.branch
 let user = options.name
-
+console.log("создаю первую страницу");
 for (let id = 0; id < worksheet.length; id++) {
     firstPage(apiKey, times[id].from, times[id].to, infoWorksheet, user, client)
 }
+console.log("создаю основную страницу");
 for (let id = 0; id < worksheet.length; id++) {
     main(times[id].from, times[id].to, addWorksheet(worksheet, id, workbook), options.file, infoWorksheet, apiKey, user, branch, client, workbook)
 }

@@ -1,6 +1,7 @@
 import request from "./request";
 
 async function getMergeRequestsIds(projectFullPath: any, to: string, from: string, apiKey: string, user: string, branch: string, client: any) {
+    console.log("получаю id merge requesta");
     const getMergeRequestIds =
         `query {
          project(fullPath: "${projectFullPath}") {
@@ -13,5 +14,6 @@ async function getMergeRequestsIds(projectFullPath: any, to: string, from: strin
       }`
     const data = await request(getMergeRequestIds, apiKey, client);
     return data.project.mergeRequests.nodes.map((x: any) => x.iid);
+
 }
 export default getMergeRequestsIds

@@ -1,6 +1,7 @@
 import request from "./request";
 
 async function getMergeRequestInfo(projectFullPath: any, mrId: string, apiKey: string, client: any) {
+    console.log("получаю информацию о merge requeste");
     const getMergeInfo =
         `query {
           project(fullPath: "${projectFullPath}") {
@@ -22,5 +23,6 @@ async function getMergeRequestInfo(projectFullPath: any, mrId: string, apiKey: s
        }`
     const data = await request(getMergeInfo, apiKey, client);
     return data.project.mergeRequest;
+
 }
 export default getMergeRequestInfo

@@ -1,4 +1,5 @@
 function getCountSize(mergeInfo: any) {
+    console.log("определяю размер изменений");
     let countSize
     if (mergeInfo.diffStatsSummary.fileCount > 10) {
         countSize = "XXL"
@@ -14,5 +15,6 @@ function getCountSize(mergeInfo: any) {
         countSize = "XS"
     }
     return countSize
+
 }
 export default getCountSize

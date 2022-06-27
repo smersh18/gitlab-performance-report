@@ -1,6 +1,7 @@
 import request from "./request";
 
 async function getProjects(apiKey: string, client: any) {
+    console.log("получаю проекты");
     const getProjects: string =
         `query {
           projects(first: 1000) {
