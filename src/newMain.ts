@@ -1,25 +1,12 @@
 import yargs, {Argv} from 'yargs';
-import gql from 'graphql-tag';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {HttpLink} from 'apollo-link-http';
 import ApolloClient from 'apollo-client';
 import fetch from 'cross-fetch'
 import excelJS from "exceljs";
-import {getWorkingHours} from "./workHours";
-import getTimes from "./getTimes";
-import spaceIfNull from "./spaceIfNull";
 import prettyDate from "./prettyDate";
-import getCountSize from "./getCountSize";
-import generateBorder from "./generateBorder";
 import addWorksheet from "./addWorksheet";
-import generateReportIssues from "./generateReportIssues";
-import getIssues from "./getIssues";
-import request from "./request";
-import getProjects from "./getProjects";
 import firstPage from "./firstPage";
-import generateReport from "./generateReport";
-import getMergeRequestInfo from "./getMergeRequestInfo";
-import getMergeRequestsIds from "./getMergeRequestIds";
 import main from "./main";
 
 function getOptions() {
