@@ -1,7 +1,7 @@
 import getProjects from "./getProjects";
 import getMergeRequestsIds from "./getMergeRequestIds";
 import getMergeRequestInfo from "./getMergeRequestInfo";
-import getTimes from "./getTimes";
+import {getTimes} from './util/dateUtil';
 import getCountSize from "./getCountSize";
 import generateReport from "./generateReport";
 

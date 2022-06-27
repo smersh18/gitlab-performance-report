@@ -4,7 +4,7 @@ import {HttpLink} from 'apollo-link-http';
 import ApolloClient from 'apollo-client';
 import fetch from 'cross-fetch'
 import excelJS from "exceljs";
-import prettyDate from "./prettyDate";
+import {prettyDate} from './util/dateUtil';
 import addWorksheet from "./addWorksheet";
 import firstPage from "./firstPage";
 import main from "./main";
@@ -30,6 +30,7 @@ const client = new ApolloClient({
     link: link,
     cache: new InMemoryCache()
 });
+
 const workbook = new excelJS.Workbook();
 let infoWorksheet = workbook.addWorksheet("Issues Summary")
 let worksheet: any = []
@@ -54,10 +55,16 @@ for (let id in times) {
 let branch = options.branch
 let user = options.name
 console.log("создаю первую страницу");
+
 for (let id = 0; id < worksheet.length; id++) {
-    firstPage(apiKey, times[id].from, times[id].to, infoWorksheet, user, client)
+    // get data
+    // save to file
+  firstPage(apiKey, times[id].from, times[id].to, infoWorksheet, user, client)
 }
+
 console.log("создаю основную страницу");
 for (let id = 0; id < worksheet.length; id++) {
-    main(times[id].from, times[id].to, addWorksheet(worksheet, id, workbook), options.file, infoWorksheet, apiKey, user, branch, client, workbook)
+  // get data
+  // save to file
+  main(times[id].from, times[id].to, addWorksheet(worksheet, id, workbook), options.file, infoWorksheet, apiKey, user, branch, client, workbook)
 }
