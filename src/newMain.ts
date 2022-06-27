@@ -7,7 +7,7 @@ import excelJS from "exceljs";
 import {prettyDate} from './util/dateUtil';
 import addWorksheets from "./util/addWorksheets";
 import firstPage from "./firstPage";
-import main from "./main";
+import createMRPages from "./createMRPages";
 
 console.log("ввожу входные данные");
 
@@ -68,7 +68,7 @@ async function fullFile(apiKey: string, times: any, mergeRequestWorksheet: any){
 
     console.log("создаю основную страницу");
     for (let id = 0; id < worksheet.length; id++) {
-        workbook = await main(times[id].from, times[id].to, mergeRequestWorksheet[id], options.file, apiKey, user, branch, client, workbook)
+        workbook = await createMRPages(times[id].from, times[id].to, mergeRequestWorksheet[id], options.file, apiKey, user, branch, client, workbook)
     }
     await workbook.xlsx.writeFile(`${fileName}.xls`);
 }
