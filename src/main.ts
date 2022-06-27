@@ -5,7 +5,7 @@ import getTimes from "./getTimes";
 import getCountSize from "./getCountSize";
 import generateReport from "./generateReport";
 
-async function main(timea: string, timeb: string, worksheet: any, fileName: string, infoWorksheet: any, apiKey: string, user: string, branch: string, client: any, workbook: any) {
+async function main(timeAfter: string, timeBefore: string, worksheet: any, fileName: string, infoWorksheet: any, apiKey: string, user: string, branch: string, client: any, workbook: any) {
     let tableData: any = []
     let mergeRquestSizes: any = []
     try {
@@ -13,7 +13,7 @@ async function main(timea: string, timeb: string, worksheet: any, fileName: stri
         const allProjects = await getProjects(apiKey, client);
         console.log("получаю id всех МР")
         for (const project of allProjects) {
-            const mergeRequestIds = await getMergeRequestsIds(project.fullPath, timea, timeb, apiKey, user, branch, client)
+            const mergeRequestIds = await getMergeRequestsIds(project.fullPath, timeAfter, timeBefore, apiKey, user, branch, client)
             mergeRquestSizes.push(mergeRequestIds.length)
 
             for (const mrId of mergeRequestIds) {

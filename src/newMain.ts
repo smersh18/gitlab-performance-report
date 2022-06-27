@@ -20,12 +20,12 @@ function getOptions() {
         .argv
     return argv
 }
-const httpLink1 = new HttpLink({
+const link = new HttpLink({
     uri: "https://git.mnxsc.tech:444/api/graphql",
     fetch: fetch
 });
 const client = new ApolloClient({
-    link: httpLink1,
+    link: link,
     cache: new InMemoryCache()
 });
 const workbook = new excelJS.Workbook();
@@ -44,10 +44,10 @@ for (let i = 0; i < time.length; i++) {
     i++
 }
 for (let id in times) {
-    let data = new Date(times[id].from)
-    let data1 = new Date(times[id].to)
+    let dataFrom = new Date(times[id].from)
+    let dataTo = new Date(times[id].to)
 
-    worksheet.push(`${prettyDate(data)} - ${prettyDate(data1)}`)
+    worksheet.push(`${prettyDate(dataFrom)} - ${prettyDate(dataTo)}`)
 }
 let branch = options.branch
 let user = options.name
