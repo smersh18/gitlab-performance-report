@@ -5,7 +5,7 @@ import {getTimes} from './util/dateUtil';
 import getCountSize from "./util/getCountSize";
 import generateReport from "./report/generateReport";
 
-async function main(timeAfter: string, timeBefore: string, worksheet: any, fileName: string, infoWorksheet: any, apiKey: string, user: string, branch: string, client: any, workbook: any) {
+async function main(timeAfter: string, timeBefore: string, worksheet: any, fileName: string, apiKey: string, user: string, branch: string, client: any, workbook: any) {
     let tableData: any = []
     let mergeRquestSizes: any = []
     try {

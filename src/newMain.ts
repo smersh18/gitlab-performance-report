@@ -31,8 +31,8 @@ const client = new ApolloClient({
     cache: new InMemoryCache()
 });
 
-const workbook = new excelJS.Workbook();
-let infoWorksheet = workbook.addWorksheet("Issues Summary")
+let workbook = new excelJS.Workbook();
+
 let worksheet: any = []
 const options: any = getOptions()
 const apiKey: any = options.api
@@ -61,10 +61,10 @@ let user = options.name
 console.log("создаю первую страницу");
 
 for (let id = 0; id < worksheet.length; id++) {
-  firstPage(apiKey, times[id].from, times[id].to, infoWorksheet, user, client)
+    workbook = firstPage(apiKey, times[id].from, times[id].to, workbook, user, client)
 }
 
 console.log("создаю основную страницу");
 for (let id = 0; id < worksheet.length; id++) {
-  main(times[id].from, times[id].to, mergeRequestWorksheet[id], options.file, infoWorksheet, apiKey, user, branch, client, workbook)
+  main(times[id].from, times[id].to, mergeRequestWorksheet[id], options.file, apiKey, user, branch, client, workbook)
 }

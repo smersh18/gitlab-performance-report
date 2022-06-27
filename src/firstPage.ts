@@ -5,7 +5,8 @@ import {getWorkingHours} from "./util/workHours";
 import generateReportIssues from "./report/generateReportIssues";
 import getProjects from "./gitlab/getProjects";
 
-async function firstPage(apiKey: string, timeAfter: string, timeBefore: string, infoWorksheet: any, user: string, client: any) {
+async function firstPage(apiKey: string, timeAfter: string, timeBefore: string, workbook: any, user: string, client: any) {
+    let infoWorksheet = workbook.addWorksheet("Issues Summary")
     let tableData = []
     const allProjects = await getProjects(apiKey, client);
 
@@ -46,5 +47,6 @@ async function firstPage(apiKey: string, timeAfter: string, timeBefore: string, 
         }
     }
     generateReportIssues(infoWorksheet, tableData)
+    return workbook
 }
 export default firstPage
