@@ -5,7 +5,7 @@ import ApolloClient from 'apollo-client';
 import fetch from 'cross-fetch'
 import excelJS from "exceljs";
 import {prettyDate} from './util/dateUtil';
-import addWorksheet from "./addWorksheet";
+import addWorksheets from "./util/addWorksheets";
 import firstPage from "./firstPage";
 import main from "./main";
 
@@ -52,19 +52,19 @@ for (let id in times) {
 
     worksheet.push(`${prettyDate(dataFrom)} - ${prettyDate(dataTo)}`)
 }
+let mergeRequestWorksheet = []
+for (let id = 0; id < worksheet.length; id++) {
+     mergeRequestWorksheet.push(addWorksheets(worksheet, id, workbook))
+}
 let branch = options.branch
 let user = options.name
 console.log("создаю первую страницу");
 
 for (let id = 0; id < worksheet.length; id++) {
-    // get data
-    // save to file
   firstPage(apiKey, times[id].from, times[id].to, infoWorksheet, user, client)
 }
 
 console.log("создаю основную страницу");
 for (let id = 0; id < worksheet.length; id++) {
-  // get data
-  // save to file
-  main(times[id].from, times[id].to, addWorksheet(worksheet, id, workbook), options.file, infoWorksheet, apiKey, user, branch, client, workbook)
+  main(times[id].from, times[id].to, mergeRequestWorksheet[id], options.file, infoWorksheet, apiKey, user, branch, client, workbook)
 }

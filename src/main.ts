@@ -1,9 +1,9 @@
-import getProjects from "./getProjects";
-import getMergeRequestsIds from "./getMergeRequestIds";
-import getMergeRequestInfo from "./getMergeRequestInfo";
+import getProjects from "./gitlab/getProjects";
+import getMergeRequestsIds from "./gitlab/getMergeRequestIds";
+import getMergeRequestInfo from "./gitlab/getMergeRequestInfo";
 import {getTimes} from './util/dateUtil';
-import getCountSize from "./getCountSize";
-import generateReport from "./generateReport";
+import getCountSize from "./util/getCountSize";
+import generateReport from "./report/generateReport";
 
 async function main(timeAfter: string, timeBefore: string, worksheet: any, fileName: string, infoWorksheet: any, apiKey: string, user: string, branch: string, client: any, workbook: any) {
     let tableData: any = []

@@ -1,4 +1,4 @@
-import {isWorkDay} from "../src/workHours";
+import {isWorkDay} from "../src/util/workHours";
 import moment from "moment";
 describe("getWorkingHours", () => {
 

@@ -1,9 +1,9 @@
-import getIssues from "./getIssues";
+import getIssues from "./gitlab/getIssues";
 import spaceIfNull from "./util/spaceIfNull";
 import {getTimes} from './util/dateUtil';
-import {getWorkingHours} from "./workHours";
-import generateReportIssues from "./generateReportIssues";
-import getProjects from "./getProjects";
+import {getWorkingHours} from "./util/workHours";
+import generateReportIssues from "./report/generateReportIssues";
+import getProjects from "./gitlab/getProjects";
 
 async function firstPage(apiKey: string, timeAfter: string, timeBefore: string, infoWorksheet: any, user: string, client: any) {
     let tableData = []

@@ -1,4 +1,4 @@
-import {getWorkingHours} from "../src/workHours";
+import {getWorkingHours} from "../src/util/workHours";
 
 describe("getWorkingHours", () => {
 
