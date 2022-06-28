@@ -4,10 +4,15 @@ import getMergeRequestInfo from "./gitlab/getMergeRequestInfo";
 import {getTimes} from './util/dateUtil';
 import getCountSize from "./util/getCountSize";
 import generateReport from "./report/generateReport";
+import addWorksheets from "./util/addWorksheets";
 
-async function createMRPages(timeAfter: string, timeBefore: string, worksheet: any, fileName: string, apiKey: string, user: string, branch: string, client: any, workbook: any) {
+async function createMRPages(timeAfter: string, timeBefore: string, fileName: string, apiKey: string, user: string, branch: string, client: any, workbook: any, id: number, worksheet: any, times: any) {
     let tableData: any = []
     let mergeRquestSizes: any = []
+    let mergeRequestWorksheet = []
+    for (let id = 0; id < worksheet.length; id++) {
+        mergeRequestWorksheet.push(addWorksheets(worksheet, id, workbook))
+    }
     try {
         console.log("получаю названия проектов")
         const allProjects = await getProjects(apiKey, client);
@@ -39,7 +44,10 @@ async function createMRPages(timeAfter: string, timeBefore: string, worksheet: a
             await workbook.xlsx.writeFile(`${fileName}.xls`)
         }
         console.log("[INFO] Cоздаю файл эксель")
-        generateReport(tableData, worksheet, fileName, workbook)
+        for (let id = 0; id < mergeRequestWorksheet.length; id++){
+            generateReport(tableData, mergeRequestWorksheet[id], fileName, workbook)
+        }
+
     } catch (err) {
         console.log(err);
     }

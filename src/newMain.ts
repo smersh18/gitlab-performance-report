@@ -53,25 +53,21 @@ for (let id in times) {
 
     worksheet.push(`${prettyDate(dataFrom)} - ${prettyDate(dataTo)}`)
 }
-let mergeRequestWorksheet = []
-for (let id = 0; id < worksheet.length; id++) {
-    mergeRequestWorksheet.push(addWorksheets(worksheet, id, workbook))
-}
 let branch = options.branch
 let user = options.name
 let fileName = options.file
 console.log("создаю первую страницу");
-async function fullFile(apiKey: string, times: any, mergeRequestWorksheet: any){
+async function fullFile(apiKey: string, times: any){
     for (let id = 0; id < worksheet.length; id++) {
         workbook = await firstPage(apiKey, times[id].from, times[id].to, workbook, user, client)
     }
 
     console.log("создаю основную страницу");
     for (let id = 0; id < worksheet.length; id++) {
-        workbook = await createMRPages(times[id].from, times[id].to, mergeRequestWorksheet[id], options.file, apiKey, user, branch, client, workbook)
+        workbook = await createMRPages(times[id].from, times[id].to, options.file, apiKey, user, branch, client, workbook, id, worksheet, times)
     }
     await workbook.xlsx.writeFile(`${fileName}.xls`);
 }
 
-fullFile(apiKey, times, mergeRequestWorksheet)
+fullFile(apiKey, times, )
 
