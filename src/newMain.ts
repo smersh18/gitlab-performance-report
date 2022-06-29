@@ -3,7 +3,7 @@ import {InMemoryCache} from 'apollo-cache-inmemory';
 import {HttpLink} from 'apollo-link-http';
 import ApolloClient from 'apollo-client';
 import fetch from 'cross-fetch'
-import excelJS from "exceljs";
+import excelJS, {Workbook} from "exceljs";
 import {prettyDate} from './util/dateUtil';
 import addWorksheets from "./util/addWorksheets";
 import firstPage from "./firstPage";
@@ -32,9 +32,8 @@ const client = new ApolloClient({
     cache: new InMemoryCache()
 });
 
-let workbook = new excelJS.Workbook();
-
-let worksheet: any = []
+let workbook: Workbook = new excelJS.Workbook();
+let worksheet: string[] = []
 const options: any = getOptions()
 const apiKey: any = options.api
 let time = []

@@ -5,8 +5,9 @@ import {getTimes} from './util/dateUtil';
 import getCountSize from "./util/getCountSize";
 import generateReport from "./report/generateReport";
 import addWorksheets from "./util/addWorksheets";
+import {Workbook} from "exceljs";
 
-async function createMRPages(timeAfter: string, timeBefore: string, fileName: string, apiKey: string, user: string, branch: string, client: any, workbook: any, id: number, worksheet: any, times: any) {
+async function createMRPages(timeAfter: string, timeBefore: string, fileName: string, apiKey: string, user: string, branch: string, client: any, workbook: Workbook, id: number, worksheet: string[], times: any) {
     let tableData: any = []
     let mergeRquestSizes: any = []
     let mergeRequestWorksheet = []
