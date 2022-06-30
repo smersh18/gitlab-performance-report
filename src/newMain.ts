@@ -55,7 +55,7 @@ for (let id in times) {
 let branch = options.branch
 let user = options.name
 let fileName = options.file
-console.log("создаю первую страницу");
+
 async function fullFile(apiKey: string, times: any){
     for (let id = 0; id < worksheet.length; id++) {
         workbook = await firstPage(apiKey, times[id].from, times[id].to, workbook, user, client)

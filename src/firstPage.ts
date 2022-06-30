@@ -7,6 +7,7 @@ import getProjects from "./gitlab/getProjects";
 import {Workbook} from "exceljs";
 
 async function firstPage(apiKey: string, timeAfter: string, timeBefore: string, workbook: Workbook, user: string, client: any) {
+    console.log("создаю первую страницу");
     let infoWorksheet = workbook.addWorksheet("Issues Summary")
     let tableData = []
     const allProjects = await getProjects(apiKey, client);

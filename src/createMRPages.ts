@@ -1,7 +1,7 @@
 import getProjects from "./gitlab/getProjects";
 import getMergeRequestsIds from "./gitlab/getMergeRequestIds";
 import getMergeRequestInfo from "./gitlab/getMergeRequestInfo";
-import {getTimes} from './util/dateUtil';
+import {getTimes, prettyDate} from './util/dateUtil';
 import getCountSize from "./util/getCountSize";
 import generateReport from "./report/generateReport";
 import addWorksheets from "./util/addWorksheets";
@@ -11,6 +11,12 @@ async function createMRPages(timeAfter: string, timeBefore: string, fileName: st
     let tableData: any = []
     let mergeRquestSizes: any = []
     let mergeRequestWorksheet = []
+    for (let id in times) {
+        let dataFrom = new Date(times[id].from)
+        let dataTo = new Date(times[id].to)
+
+        worksheet.push(`${prettyDate(dataFrom)} - ${prettyDate(dataTo)}`)
+    }
     for (let id = 0; id < worksheet.length; id++) {
         mergeRequestWorksheet.push(addWorksheets(worksheet, id, workbook))
     }
