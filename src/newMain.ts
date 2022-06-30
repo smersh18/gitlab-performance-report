@@ -4,8 +4,6 @@ import {HttpLink} from 'apollo-link-http';
 import ApolloClient from 'apollo-client';
 import fetch from 'cross-fetch'
 import excelJS, {Workbook} from "exceljs";
-import {prettyDate} from './util/dateUtil';
-import addWorksheets from "./util/addWorksheets";
 import firstPage from "./firstPage";
 import createMRPages from "./createMRPages";
 
@@ -33,7 +31,6 @@ const client = new ApolloClient({
 });
 
 let workbook: Workbook = new excelJS.Workbook();
-let worksheet: string[] = []
 const options: any = getOptions()
 const apiKey: any = options.api
 let time = []
@@ -58,7 +55,7 @@ async function fullFile(apiKey: string, times: any){
 
     console.log("создаю основную страницу");
     for (let id = 0; id < times.length; id++) {
-        workbook = await createMRPages(times[id].from, times[id].to, options.file, apiKey, user, branch, client, workbook, id, worksheet, times)
+        workbook = await createMRPages(times[id].from, times[id].to, options.file, apiKey, user, branch, client, workbook, id, times)
     }
     await workbook.xlsx.writeFile(`${fileName}.xls`);
 }

@@ -7,8 +7,9 @@ import generateReport from "./report/generateReport";
 import addWorksheets from "./util/addWorksheets";
 import {Workbook} from "exceljs";
 
-async function createMRPages(timeAfter: string, timeBefore: string, fileName: string, apiKey: string, user: string, branch: string, client: any, workbook: Workbook, id: number, worksheet: string[], times: any) {
+async function createMRPages(timeAfter: string, timeBefore: string, fileName: string, apiKey: string, user: string, branch: string, client: any, workbook: Workbook, id: number, times: any) {
     let tableData: any = []
+    let worksheet: string[] = []
     let mergeRquestSizes: any = []
     let mergeRequestWorksheet = []
     for (let id in times) {
