@@ -46,23 +46,18 @@ for (let i = 0; i < time.length; i++) {
     times.push({from: time[i], to: time[i + 1]})
     i++
 }
-for (let id in times) {
-    let dataFrom = new Date(times[id].from)
-    let dataTo = new Date(times[id].to)
 
-    worksheet.push(`${prettyDate(dataFrom)} - ${prettyDate(dataTo)}`)
-}
 let branch = options.branch
 let user = options.name
 let fileName = options.file
 
 async function fullFile(apiKey: string, times: any){
-    for (let id = 0; id < worksheet.length; id++) {
+    for (let id = 0; id < times.length; id++) {
         workbook = await firstPage(apiKey, times[id].from, times[id].to, workbook, user, client)
     }
 
     console.log("создаю основную страницу");
-    for (let id = 0; id < worksheet.length; id++) {
+    for (let id = 0; id < times.length; id++) {
         workbook = await createMRPages(times[id].from, times[id].to, options.file, apiKey, user, branch, client, workbook, id, worksheet, times)
     }
     await workbook.xlsx.writeFile(`${fileName}.xls`);
