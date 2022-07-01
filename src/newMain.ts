@@ -1,4 +1,4 @@
-import yargs, {Argv} from 'yargs';
+import yargs from 'yargs';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {HttpLink} from 'apollo-link-http';
 import ApolloClient from 'apollo-client';
@@ -6,6 +6,7 @@ import fetch from 'cross-fetch'
 import excelJS, {Workbook} from "exceljs";
 import firstPage from "./firstPage";
 import createMRPages from "./createMRPages";
+import {timesType} from "./util/types";
 
 console.log("ввожу входные данные");
 
@@ -38,8 +39,8 @@ time = options.time.split(',')
 if (time.length % 2 !== 0) {
     time.pop()
 }
-type  mySuperType = {from: any, to: any}
-let times: mySuperType[] = []
+
+let times: timesType[] = []
 for (let i = 0; i < time.length; i++) {
     times.push({from: time[i], to: time[i + 1]})
     i++
@@ -61,5 +62,5 @@ async function fullFile(apiKey: string, times: any){
     await workbook.xlsx.writeFile(`${fileName}.xls`);
 }
 
-fullFile(apiKey, times, )
+fullFile(apiKey, times)
 

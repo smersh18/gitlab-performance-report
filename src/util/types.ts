@@ -1,0 +1,1 @@
+export type timesType = {from: string, to: string}
