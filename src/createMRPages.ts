@@ -1,13 +1,26 @@
 import getProjects from "./gitlab/getProjects";
 import getMergeRequestsIds from "./gitlab/getMergeRequestIds";
 import getMergeRequestInfo from "./gitlab/getMergeRequestInfo";
-import {getTimes} from './util/dateUtil';
+import {getTimes, prettyDate} from './util/dateUtil';
 import getCountSize from "./util/getCountSize";
 import generateReport from "./report/generateReport";
+import addWorksheets from "./util/addWorksheets";
+import {Workbook} from "exceljs";
 
-async function main(timeAfter: string, timeBefore: string, worksheet: any, fileName: string, infoWorksheet: any, apiKey: string, user: string, branch: string, client: any, workbook: any) {
+async function createMRPages(timeAfter: string, timeBefore: string, fileName: string, apiKey: string, user: string, branch: string, client: any, workbook: Workbook, id: number, times: any) {
     let tableData: any = []
+    let worksheet: string[] = []
     let mergeRquestSizes: any = []
+    let mergeRequestWorksheet = []
+    for (let id in times) {
+        let dataFrom = new Date(times[id].from)
+        let dataTo = new Date(times[id].to)
+
+        worksheet.push(`${prettyDate(dataFrom)} - ${prettyDate(dataTo)}`)
+    }
+    for (let id = 0; id < worksheet.length; id++) {
+        mergeRequestWorksheet.push(addWorksheets(worksheet, id, workbook))
+    }
     try {
         console.log("получаю названия проектов")
         const allProjects = await getProjects(apiKey, client);
@@ -39,9 +52,13 @@ async function main(timeAfter: string, timeBefore: string, worksheet: any, fileN
             await workbook.xlsx.writeFile(`${fileName}.xls`)
         }
         console.log("[INFO] Cоздаю файл эксель")
-        generateReport(tableData, worksheet, fileName, workbook)
+        for (let id = 0; id < mergeRequestWorksheet.length; id++){
+            generateReport(tableData, mergeRequestWorksheet[id], fileName, workbook)
+        }
+
     } catch (err) {
         console.log(err);
     }
+    return workbook
 }
-export default main
+export default createMRPages

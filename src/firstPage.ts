@@ -4,8 +4,11 @@ import {getTimes} from './util/dateUtil';
 import {getWorkingHours} from "./util/workHours";
 import generateReportIssues from "./report/generateReportIssues";
 import getProjects from "./gitlab/getProjects";
+import {Workbook} from "exceljs";
 
-async function firstPage(apiKey: string, timeAfter: string, timeBefore: string, infoWorksheet: any, user: string, client: any) {
+async function firstPage(apiKey: string, timeAfter: string, timeBefore: string, workbook: Workbook, user: string, client: any) {
+    console.log("создаю первую страницу");
+    let infoWorksheet = workbook.addWorksheet("Issues Summary")
     let tableData = []
     const allProjects = await getProjects(apiKey, client);
 
@@ -46,5 +49,6 @@ async function firstPage(apiKey: string, timeAfter: string, timeBefore: string, 
         }
     }
     generateReportIssues(infoWorksheet, tableData)
+    return workbook
 }
 export default firstPage

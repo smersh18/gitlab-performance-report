@@ -31,6 +31,6 @@ async function generateReport(tableData: any, page: any, fileName: string, workb
             };
         }
     }
-    await workbook.xlsx.writeFile(`${fileName}.xls`);
+
 }
 export default generateReport
