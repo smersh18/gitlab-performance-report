@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose"
+    "test": "jest --verbose",
+    "tsc": "tsc --build",
+    "build": "node newMain.js"
   },
   "keywords": [],
   "author": "",
