@@ -23,7 +23,7 @@ function getOptions() {
 }
 
 const link = new HttpLink({
-    uri: "https://git.mnxsc.tech:444/api/graphql",
+    uri: "https://git.mnxsc.tech:443/api/graphql",
     fetch: fetch
 });
 const client = new ApolloClient({
@@ -63,4 +63,3 @@ async function fullFile(apiKey: string, times: any){
 }
 
 fullFile(apiKey, times)
-
