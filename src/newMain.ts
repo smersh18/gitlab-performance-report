@@ -23,7 +23,7 @@ function getOptions() {
 }
 
 const link = new HttpLink({
-    uri: "https://git.mnxsc.tech:443/api/graphql",
+    uri: "https://git.mnxsc.tech/api/graphql",
     fetch: fetch
 });
 const client = new ApolloClient({
