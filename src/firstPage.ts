@@ -5,6 +5,7 @@ import {getWorkingHours} from "./util/workHours";
 import generateReportIssues from "./report/generateReportIssues";
 import getProjects from "./gitlab/getProjects";
 import {Workbook} from "exceljs";
+import lodash from "lodash";
 
 async function firstPage(apiKey: string, timeAfter: string, timeBefore: string, workbook: Workbook, user: string, client: any) {
     console.log("создаю первую страницу");
@@ -22,7 +23,7 @@ async function firstPage(apiKey: string, timeAfter: string, timeBefore: string, 
                 let author = spaceIfNull(issue.author.name)
                 let title = spaceIfNull(issue.title)
                 let names: any = " "
-                if (issue.assignees.nodes !== []) {
+                if (!lodash.isEqual(issue.assignees.nodes, [])) {
                     let assignees: any = issue.assignees.nodes.map((o: any) => o.name)
                     names = assignees.reduce((accum: any, value: any) => accum + ", " + value)
                 }
