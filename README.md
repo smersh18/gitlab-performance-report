@@ -1,7 +1,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+service for assessing the effectiveness of personnel work
 
 ## Installation
 
